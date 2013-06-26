@@ -93,6 +93,11 @@ namespace MonoKit.UI.ViewDeck
         private float preRotationCenterWidth;
         private float panOrigin;
 
+		private SizeF preRotationSize;
+		private SizeF preRotationCenterSize;
+		private bool preRotationIsLandscape;
+		UIInterfaceOrientation willAppearShouldArrangeViewsAfterRotation;
+
         private UIViewController _centerController;
         private UIViewController _leftController;
         private UIViewController _rightController;
@@ -726,12 +731,22 @@ namespace MonoKit.UI.ViewDeck
             }
         }
 
+		private bool IsLandscape(UIInterfaceOrientation orientation)
+		{
+			return orientation == UIInterfaceOrientation.LandscapeLeft || orientation == UIInterfaceOrientation.LandscapeRight;
+		}
+
         [Obsolete]
         public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
         {
+			this.preRotationSize = this.ReferenceBounds.Size;
+			this.preRotationCenterSize = this.CenterViewBounds.Size;
+			this.preRotationIsLandscape = IsLandscape (UIApplication.SharedApplication.StatusBarOrientation);				
+			this.willAppearShouldArrangeViewsAfterRotation = toInterfaceOrientation;
+
             this.preRotationWidth = this.ReferenceBounds.Size.Width;
             this.preRotationCenterWidth = this.CenterViewBounds.Size.Width;//was - this.centerView.Bounds.Size.Width;
-            
+
             bool should = true;
             if (this.CenterController != null)
             {
@@ -752,6 +767,16 @@ namespace MonoKit.UI.ViewDeck
         {
             base.WillRotate(toInterfaceOrientation, duration);
             this.RestoreShadowToSlidingView();
+
+			if (preRotationSize.Width == 0) 
+			{
+				this.preRotationSize = this.ReferenceBounds.Size;
+				this.preRotationCenterSize = this.CenterViewBounds.Size;
+				this.preRotationIsLandscape = IsLandscape (UIApplication.SharedApplication.StatusBarOrientation);				
+
+				this.preRotationWidth = this.ReferenceBounds.Size.Width;
+				this.preRotationCenterWidth = this.CenterViewBounds.Size.Width;//was - this.centerView.Bounds.Size.Width;
+			}
         }
 
         public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
@@ -1218,6 +1243,7 @@ namespace MonoKit.UI.ViewDeck
             this.SetSlidingFrameForOffset(offset);
             
             this.preRotationWidth = 0;
+			this.preRotationSize = new SizeF ();
         }
 
         private void ShowCenterView(bool animated, Action<ViewDeckController> completed)
