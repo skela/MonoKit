@@ -94,9 +94,9 @@ namespace MonoKit.UI.ViewDeck
         private float panOrigin;
 
 		private SizeF preRotationSize;
-		private SizeF preRotationCenterSize;
-		private bool preRotationIsLandscape;
-		UIInterfaceOrientation willAppearShouldArrangeViewsAfterRotation;
+		//private SizeF preRotationCenterSize;
+		//private bool preRotationIsLandscape;
+		//UIInterfaceOrientation willAppearShouldArrangeViewsAfterRotation;
 
         private UIViewController _centerController;
         private UIViewController _leftController;
@@ -740,9 +740,9 @@ namespace MonoKit.UI.ViewDeck
         public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
         {
 			this.preRotationSize = this.ReferenceBounds.Size;
-			this.preRotationCenterSize = this.CenterViewBounds.Size;
-			this.preRotationIsLandscape = IsLandscape (UIApplication.SharedApplication.StatusBarOrientation);				
-			this.willAppearShouldArrangeViewsAfterRotation = toInterfaceOrientation;
+			//this.preRotationCenterSize = this.CenterViewBounds.Size;
+			//this.preRotationIsLandscape = IsLandscape (UIApplication.SharedApplication.StatusBarOrientation);				
+			//this.willAppearShouldArrangeViewsAfterRotation = toInterfaceOrientation;
 
             this.preRotationWidth = this.ReferenceBounds.Size.Width;
             this.preRotationCenterWidth = this.CenterViewBounds.Size.Width;//was - this.centerView.Bounds.Size.Width;
@@ -771,8 +771,8 @@ namespace MonoKit.UI.ViewDeck
 			if (preRotationSize.Width == 0) 
 			{
 				this.preRotationSize = this.ReferenceBounds.Size;
-				this.preRotationCenterSize = this.CenterViewBounds.Size;
-				this.preRotationIsLandscape = IsLandscape (UIApplication.SharedApplication.StatusBarOrientation);				
+				//this.preRotationCenterSize = this.CenterViewBounds.Size;
+				//this.preRotationIsLandscape = IsLandscape (UIApplication.SharedApplication.StatusBarOrientation);				
 
 				this.preRotationWidth = this.ReferenceBounds.Size.Width;
 				this.preRotationCenterWidth = this.CenterViewBounds.Size.Width;//was - this.centerView.Bounds.Size.Width;
