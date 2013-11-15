@@ -731,6 +731,17 @@ namespace MonoKit.UI.ViewDeck
             }
         }
 
+		public void SetPreferredStatusBarStyle(UIStatusBarStyle aStatusBarStyle)
+		{
+			statusBarStyle = aStatusBarStyle;
+		}
+		UIStatusBarStyle statusBarStyle;
+
+		public override UIStatusBarStyle PreferredStatusBarStyle()
+		{
+			return statusBarStyle;
+		}
+
 		private bool IsLandscape(UIInterfaceOrientation orientation)
 		{
 			return orientation == UIInterfaceOrientation.LandscapeLeft || orientation == UIInterfaceOrientation.LandscapeRight;
