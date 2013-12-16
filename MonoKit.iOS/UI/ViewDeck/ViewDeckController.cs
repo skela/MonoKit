@@ -2156,16 +2156,16 @@ namespace MonoKit.UI.ViewDeck
                 {
                     this.View.AddSubview(this.centerView);
 
-                    UINavigationController navController = centerController.GetType().IsSubclassOf(typeof(UINavigationController)) 
-                    ? (UINavigationController)centerController 
-                    : null;
-
-                    bool barHidden = false;
-                    if (navController != null && !navController.NavigationBarHidden) 
-                    {
-                        barHidden = true;
-                        navController.NavigationBarHidden = true;
-                    }
+//                    UINavigationController navController = centerController.GetType().IsSubclassOf(typeof(UINavigationController)) 
+//                    ? (UINavigationController)centerController 
+//                    : null;
+//
+//                    bool barHidden = false;
+//                    if (navController != null && !navController.NavigationBarHidden) 
+//                    {
+//                        barHidden = true;
+//                        navController.NavigationBarHidden = true;
+//                    }
                     
                     this.SetSlidingAndReferenceViews();
                     controller.View.Frame = currentFrame;
@@ -2173,8 +2173,8 @@ namespace MonoKit.UI.ViewDeck
                     controller.View.Hidden = false;
                     this.centerView.AddSubview(controller.View);
                     
-                    if (barHidden) 
-                        navController.NavigationBarHidden = false;
+//                    if (barHidden) 
+//                        navController.NavigationBarHidden = false;
                     
                     this.AddPanners();
                     this.ApplyShadowToSlidingView();
