@@ -767,6 +767,36 @@ namespace MonoKit.UI.ViewDeck
             return should;
         }
 
+		public override bool ShouldAutorotate()
+		{
+			bool should = true;
+			if (this.CenterController != null)
+			{
+				should = this.CenterController.ShouldAutorotate();
+			}
+			return should;
+		}
+
+		public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation()
+		{
+			var or = UIInterfaceOrientation.Portrait;
+			if (this.CenterController != null)
+			{
+				or = this.CenterController.PreferredInterfaceOrientationForPresentation();
+			}
+			return or;
+		}
+
+		public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+		{
+			var or = UIInterfaceOrientationMask.All;
+			if (this.CenterController != null)
+			{
+				or = this.CenterController.GetSupportedInterfaceOrientations();
+			}
+			return or;
+		}
+
         public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
         {
             base.WillAnimateRotation(toInterfaceOrientation, duration);
