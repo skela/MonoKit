@@ -1293,6 +1293,7 @@ namespace MonoKit.UI.ViewDeck
             {
                 this.LeftController.View.Hidden = false;
                 this.SetSlidingFrameForOffset(this.ReferenceBounds.Size.Width - this.LeftLedge);
+				RefreshStatusBar();
                 this.CenterViewHidden();
             }, () =>
             {
@@ -1334,6 +1335,7 @@ namespace MonoKit.UI.ViewDeck
             {
                 this.LeftController.View.Hidden = false;
                 this.SetSlidingFrameForOffset(this.ReferenceBounds.Size.Width);
+				RefreshStatusBar();
             }, () => 
             {
                 // run block if it's defined
@@ -1381,6 +1383,7 @@ namespace MonoKit.UI.ViewDeck
             UIView.Animate(CloseSlideDuration(animated), 0, options | UIViewAnimationOptions.LayoutSubviews, () => 
             {
                 this.SetSlidingFrameForOffset(0);
+				RefreshStatusBar();
                 this.CenterViewVisible();
             }, () =>  
             {
@@ -1429,6 +1432,7 @@ namespace MonoKit.UI.ViewDeck
                 UIView.Animate(CloseSlideDuration(true), 0, UIViewAnimationOptions.CurveEaseOut | UIViewAnimationOptions.LayoutSubviews, () => 
                 {
                     this.SetSlidingFrameForOffset(0);
+					RefreshStatusBar();
                     this.CenterViewVisible();
                 } , () => 
                 {
@@ -1477,6 +1481,7 @@ namespace MonoKit.UI.ViewDeck
             {
                 this.RightController.View.Hidden = false;
                 this.SetSlidingFrameForOffset(this.RightLedge - this.ReferenceBounds.Size.Width);
+				RefreshStatusBar();
                 this.CenterViewHidden();
             }, () => 
             {
@@ -2444,7 +2449,9 @@ namespace MonoKit.UI.ViewDeck
 
 		private void RefreshStatusBar()
 		{
-			SetNeedsStatusBarAppearanceUpdate ();
+			Selector selector = new Selector ("setNeedsStatusBarAppearanceUpdate");
+			if (RespondsToSelector(selector))
+				SetNeedsStatusBarAppearanceUpdate ();
 		}
 
 		#endregion
