@@ -1301,6 +1301,8 @@ namespace MonoKit.UI.ViewDeck
                 {
                     this.Delegate.DidOpenLeftView(this, animated);
                 }
+
+				RefreshStatusBar();
             });
             
             return true;
@@ -1353,6 +1355,8 @@ namespace MonoKit.UI.ViewDeck
                     {
                         this.Delegate.DidOpenLeftView(this, true);
                     }
+
+					RefreshStatusBar();
                 });
             });
             
@@ -1391,6 +1395,8 @@ namespace MonoKit.UI.ViewDeck
                     this.Delegate.DidCloseLeftView(this, animated);
                     this.Delegate.DidShowCenterView(this, animated);
                 }
+
+				RefreshStatusBar();
             });
             
             return true;
@@ -1438,6 +1444,8 @@ namespace MonoKit.UI.ViewDeck
                         this.Delegate.DidCloseLeftView(this, true);
                         this.Delegate.DidShowCenterView(this, true);
                     }
+
+					RefreshStatusBar();
                 });
             });
             
@@ -1481,6 +1489,8 @@ namespace MonoKit.UI.ViewDeck
                 {
                     this.Delegate.DidOpenRightView(this, animated);
                 }
+
+				RefreshStatusBar();
             });
 
             return true;
@@ -1533,6 +1543,8 @@ namespace MonoKit.UI.ViewDeck
                     {
                         this.Delegate.DidOpenRightView(this, true);
                     }
+
+					RefreshStatusBar();
                 });
             });
             
@@ -1571,6 +1583,8 @@ namespace MonoKit.UI.ViewDeck
                     this.Delegate.DidCloseRightView(this, animated);
                     this.Delegate.DidShowCenterView(this, animated);
                 }
+
+				RefreshStatusBar();
             });
             
             return true;
@@ -1615,6 +1629,8 @@ namespace MonoKit.UI.ViewDeck
                         this.Delegate.DidCloseRightView(this, true);
                         this.Delegate.DidShowCenterView(this, true);
                     }
+
+					RefreshStatusBar();
                 });
             });
             
@@ -2394,6 +2410,44 @@ namespace MonoKit.UI.ViewDeck
                 shadowedView.Layer.ShadowPath = UIBezierPath.FromRect(shadowedView.Bounds).CGPath;
             }
         }
+
+		#region Status Bar
+
+		private UIViewController ActiveViewController
+		{
+			get
+			{
+				UIViewController vc = CenterController;
+				if (LeftController != null && LeftControllerIsOpen)
+					vc = LeftController;
+				if (RightController != null && RightControllerIsOpen)
+					vc = RightController;
+				return vc;
+			}
+		}
+
+		public override UIStatusBarStyle PreferredStatusBarStyle ()
+		{
+			UIViewController vc = ActiveViewController;
+			if (vc != null)
+				return vc.PreferredStatusBarStyle ();
+			return UIStatusBarStyle.Default;
+		}
+
+		public override bool PrefersStatusBarHidden ()
+		{
+			UIViewController vc = ActiveViewController;
+			if (vc != null)
+				return vc.PrefersStatusBarHidden();
+			return false;
+		}
+
+		private void RefreshStatusBar()
+		{
+			SetNeedsStatusBarAppearanceUpdate ();
+		}
+
+		#endregion
     }
 }
 
