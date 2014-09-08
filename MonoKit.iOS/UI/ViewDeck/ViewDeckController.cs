@@ -731,6 +731,17 @@ namespace MonoKit.UI.ViewDeck
             }
         }
 
+		public void SetPreferredStatusBarStyle(UIStatusBarStyle aStatusBarStyle)
+		{
+			statusBarStyle = aStatusBarStyle;
+		}
+		UIStatusBarStyle statusBarStyle;
+
+		public override UIStatusBarStyle PreferredStatusBarStyle()
+		{
+			return statusBarStyle;
+		}
+
 		private bool IsLandscape(UIInterfaceOrientation orientation)
 		{
 			return orientation == UIInterfaceOrientation.LandscapeLeft || orientation == UIInterfaceOrientation.LandscapeRight;
@@ -755,6 +766,36 @@ namespace MonoKit.UI.ViewDeck
 
             return should;
         }
+
+		public override bool ShouldAutorotate()
+		{
+			bool should = true;
+			if (this.CenterController != null)
+			{
+				should = this.CenterController.ShouldAutorotate();
+			}
+			return should;
+		}
+
+		public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation()
+		{
+			var or = UIInterfaceOrientation.Portrait;
+			if (this.CenterController != null)
+			{
+				or = this.CenterController.PreferredInterfaceOrientationForPresentation();
+			}
+			return or;
+		}
+
+		public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+		{
+			var or = UIInterfaceOrientationMask.All;
+			if (this.CenterController != null)
+			{
+				or = this.CenterController.GetSupportedInterfaceOrientations();
+			}
+			return or;
+		}
 
         public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
         {
@@ -2166,16 +2207,16 @@ namespace MonoKit.UI.ViewDeck
                 {
                     this.View.AddSubview(this.centerView);
 
-                    UINavigationController navController = centerController.GetType().IsSubclassOf(typeof(UINavigationController)) 
-                    ? (UINavigationController)centerController 
-                    : null;
-
-                    bool barHidden = false;
-                    if (navController != null && !navController.NavigationBarHidden) 
-                    {
-                        barHidden = true;
-                        navController.NavigationBarHidden = true;
-                    }
+//                    UINavigationController navController = centerController.GetType().IsSubclassOf(typeof(UINavigationController)) 
+//                    ? (UINavigationController)centerController 
+//                    : null;
+//
+//                    bool barHidden = false;
+//                    if (navController != null && !navController.NavigationBarHidden) 
+//                    {
+//                        barHidden = true;
+//                        navController.NavigationBarHidden = true;
+//                    }
                     
                     this.SetSlidingAndReferenceViews();
                     controller.View.Frame = currentFrame;
@@ -2183,8 +2224,8 @@ namespace MonoKit.UI.ViewDeck
                     controller.View.Hidden = false;
                     this.centerView.AddSubview(controller.View);
                     
-                    if (barHidden) 
-                        navController.NavigationBarHidden = false;
+//                    if (barHidden) 
+//                        navController.NavigationBarHidden = false;
                     
                     this.AddPanners();
                     this.ApplyShadowToSlidingView();
