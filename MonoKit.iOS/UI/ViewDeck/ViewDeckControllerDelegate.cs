@@ -35,11 +35,11 @@ namespace MonoKit.UI.ViewDeck
             return false;
         }
 
-        public virtual void DidPanToOffset(ViewDeckController viewDeckController, float offset) 
+        public virtual void DidPanToOffset(ViewDeckController viewDeckController, nfloat offset) 
         {
         }
 
-        public virtual void SlideOffsetChanged(ViewDeckController viewDeckController, float offset) 
+        public virtual void SlideOffsetChanged(ViewDeckController viewDeckController, nfloat offset) 
         {
         }
 

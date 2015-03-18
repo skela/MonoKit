@@ -78,20 +78,20 @@ namespace MonoKit.UI.ViewDeck
 
         private UIViewController slidingController;
 
-        private float originalShadowRadius;
+        private nfloat originalShadowRadius;
         private CGSize originalShadowOffset;
         private UIColor originalShadowColor;
-        private float originalShadowOpacity;
+        private nfloat originalShadowOpacity;
 
         private UIView referenceView;
         private UIBezierPath originalShadowPath;
         private UIView centerView;
         private UIButton centerTapper;
 
-        private float offset;
-        private float preRotationWidth;
-        private float preRotationCenterWidth;
-        private float panOrigin;
+        private nfloat offset;
+        private nfloat preRotationWidth;
+        private nfloat preRotationCenterWidth;
+        private nfloat panOrigin;
 
 		private CGSize preRotationSize;
 		//private SizeF preRotationCenterSize;
@@ -101,12 +101,12 @@ namespace MonoKit.UI.ViewDeck
         private UIViewController _centerController;
         private UIViewController _leftController;
         private UIViewController _rightController;
-        private float _rightLedge;
-        private float _leftLedge;
+        private nfloat _rightLedge;
+        private nfloat _leftLedge;
         private ViewDeckNavigationControllerBehavior _navigationControllerBehavior;
         private ViewDeckPanningMode _panningMode;
         private UIView _panningView;
-        private float _maxLedge;
+        private nfloat _maxLedge;
         private bool _automaticallyUpdateTabBarItems;
 
         #endregion
@@ -232,7 +232,7 @@ namespace MonoKit.UI.ViewDeck
 
         /// <summary>
         /// </summary>
-        public float RightLedge
+        public nfloat RightLedge
         {
             get
             {
@@ -247,7 +247,7 @@ namespace MonoKit.UI.ViewDeck
 
         /// <summary>
         /// </summary>
-        public float LeftLedge
+        public nfloat LeftLedge
         {
             get
             {
@@ -262,7 +262,7 @@ namespace MonoKit.UI.ViewDeck
         
         /// <summary>
         /// </summary>
-        public float MaxLedge
+        public nfloat MaxLedge
         {
             get
             {
@@ -501,7 +501,7 @@ namespace MonoKit.UI.ViewDeck
             }
         }
 
-        private float RelativeStatusBarHeight
+        private nfloat RelativeStatusBarHeight
         {
             get
             {
@@ -514,7 +514,7 @@ namespace MonoKit.UI.ViewDeck
             }
         }
 
-        private float StatusBarHeight 
+        private nfloat StatusBarHeight 
         {
             get
             {
@@ -529,7 +529,7 @@ namespace MonoKit.UI.ViewDeck
             }
         }
 
-        private static CGRect RectangleShrink(CGRect rect, float width, float height)
+        private static CGRect RectangleShrink(CGRect rect, nfloat width, nfloat height)
         {
             return new CGRect(rect.X, rect.Y, rect.Width - width, rect.Height - height);
         }
@@ -543,7 +543,7 @@ namespace MonoKit.UI.ViewDeck
                     return this.ReferenceBounds;
                 }
 
-                var height = 0f;
+                nfloat height = 0f;
                 if (this.NavigationController != null)
                 {
                     height = this.NavigationController.NavigationBarHidden ? 0 : this.NavigationController.NavigationBar.Frame.Size.Height;
@@ -631,7 +631,7 @@ namespace MonoKit.UI.ViewDeck
             this.CenterController.AddObserver(this, new NSString("title"), 0, IntPtr.Zero);
             }
 
-            NSAction applyViews = () => 
+            Action applyViews = () => 
             {        
                 this.CenterController.View.RemoveFromSuperview();
                 this.centerView.AddSubview(this.CenterController.View);
@@ -850,7 +850,7 @@ namespace MonoKit.UI.ViewDeck
             
             if (keyPath.Equals(new NSString("bounds"))) 
             {
-                float offset = this.SlidingControllerView.Frame.Location.X;
+                var offset = this.SlidingControllerView.Frame.Location.X;
                 this.SetSlidingFrameForOffset(offset);
 
                 this.SlidingControllerView.Layer.ShadowPath = UIBezierPath.FromRect(this.ReferenceBounds).CGPath;
@@ -1075,9 +1075,9 @@ namespace MonoKit.UI.ViewDeck
           
         #region Private Statics
 
-        private static bool FloatEqual(float a, float b)
+        private static bool FloatEqual(nfloat a, nfloat b)
         {
-            return (a - b == 0);
+            return (a - b == 0);	// still bad either way
         }
         
         private static float SlideDuration(bool animated, float duration)
@@ -1095,7 +1095,7 @@ namespace MonoKit.UI.ViewDeck
             return SlideDuration(animated, 0.3f);
         }
         
-        private static CGRect RectangleOffsetTopAndShrink(CGRect rect, float offset)
+        private static CGRect RectangleOffsetTopAndShrink(CGRect rect, nfloat offset)
         {
             return new CGRect(rect.X, rect.Y + offset, rect.Width, rect.Height - offset);
         }
@@ -1139,7 +1139,7 @@ namespace MonoKit.UI.ViewDeck
             this.panners.Clear();
         }
         
-        private void PerformSelector(Action action, float delay)
+        private void PerformSelector(Action action, nfloat delay)
         {
             int d = (int)(1000 * delay);
             
@@ -1154,7 +1154,7 @@ namespace MonoKit.UI.ViewDeck
             thread.Start();
         }
 
-        private float LimitOffset(float offset) 
+        private nfloat LimitOffset(nfloat offset) 
         {
             if (this.LeftController != null && this.RightController != null) 
             {
@@ -1163,19 +1163,19 @@ namespace MonoKit.UI.ViewDeck
 
             if (this.LeftController != null && this.MaxLedge > 0) 
             {
-                float left = this.ReferenceBounds.Size.Width - this.MaxLedge;
-                offset = Math.Max(offset, left);
+                var left = this.ReferenceBounds.Size.Width - this.MaxLedge;
+				offset = (nfloat)Math.Max(offset, left);
             }
             else if (this.RightController != null && this.MaxLedge > 0) 
             {
-                float right = this.MaxLedge - this.ReferenceBounds.Size.Width;
-                offset = Math.Min(offset, right);
+                var right = this.MaxLedge - this.ReferenceBounds.Size.Width;
+				offset = (nfloat)Math.Min(offset, right);
             }
             
             return offset;
         }
 
-        private CGRect SlidingRectForOffset(float offset) 
+        private CGRect SlidingRectForOffset(nfloat offset) 
         {
             offset = this.LimitOffset(offset);
 
@@ -1184,7 +1184,7 @@ namespace MonoKit.UI.ViewDeck
             return new CGRect(this.ResizesCenterView && offset < 0 ? 0 : offset, 0, sz.Width, sz.Height);
         }
 
-        private CGSize SlidingSizeForOffset(float offset) 
+        private CGSize SlidingSizeForOffset(nfloat offset) 
         {
             if (!this.ResizesCenterView)
             {
@@ -1201,7 +1201,7 @@ namespace MonoKit.UI.ViewDeck
             return new CGSize(this.CenterViewBounds.Size.Width - offset, this.CenterViewBounds.Size.Height);
         }
 
-        private void SetSlidingFrameForOffset(float offset) 
+        private void SetSlidingFrameForOffset(nfloat offset) 
         {
             this.offset = this.LimitOffset(offset);
             this.SlidingControllerView.Frame = this.SlidingRectForOffset(offset);
@@ -1245,7 +1245,7 @@ namespace MonoKit.UI.ViewDeck
                 return;
             }
 
-            float offset = this.SlidingControllerView.Frame.Location.X;
+            var offset = this.SlidingControllerView.Frame.Location.X;
 
             if (this.ResizesCenterView && offset == 0) 
             {
@@ -1672,7 +1672,7 @@ namespace MonoKit.UI.ViewDeck
             return true;
         }
 
-        private static CGRect  RectangleFOffset(CGRect rect, float dx, float dy)
+        private static CGRect  RectangleFOffset(CGRect rect, nfloat dx, nfloat dy)
         {
             // todo: is this correct
             return rect.Inset(dx, dy);
@@ -1748,10 +1748,10 @@ namespace MonoKit.UI.ViewDeck
         [Export("gestureRecognizerShouldBegin:")]
         private bool GestureRecognizerShouldBegin(UIGestureRecognizer gestureRecognizer)
         {
-            float px = this.SlidingControllerView.Frame.Location.X;
+            var px = this.SlidingControllerView.Frame.Location.X;
             if (px != 0) return true;
                 
-            float x = this.LocationOfPanner((UIPanGestureRecognizer)gestureRecognizer);
+            var x = this.LocationOfPanner((UIPanGestureRecognizer)gestureRecognizer);
             bool ok =  true;
 
             if (x > 0) 
@@ -1794,27 +1794,27 @@ namespace MonoKit.UI.ViewDeck
             return true;
         }
 
-        private float LocationOfPanner(UIPanGestureRecognizer panner) 
+        private nfloat LocationOfPanner(UIPanGestureRecognizer panner) 
         {
             CGPoint pan = panner.TranslationInView(this.referenceView);
-            float x = pan.X + this.panOrigin;
+            var x = pan.X + this.panOrigin;
 
             if (this.LeftController == null) 
             {
-                x = Math.Min(0, x);
+				x = (nfloat)Math.Min(0, x);
             }
 
             if (this.RightController == null) 
             {
-                x = Math.Max(0, x);
+				x = (nfloat)Math.Max(0, x);
             }
             
-            float w = this.ReferenceBounds.Size.Width;
-            float lx = Math.Max(Math.Min(x, w - this.LeftLedge), -w + this.RightLedge);
+            var w = this.ReferenceBounds.Size.Width;
+			nfloat lx = (nfloat)(Math.Max(Math.Min(x, w - this.LeftLedge), -w + this.RightLedge));
             
             if (this.Elastic) 
             {
-                float dx = Math.Abs(x) - Math.Abs(lx);
+				nfloat dx = (nfloat)(Math.Abs(x) - Math.Abs(lx));
 
                 if (dx > 0) 
                 {
@@ -1835,9 +1835,9 @@ namespace MonoKit.UI.ViewDeck
         {
             if (!this.Enabled) return;
 
-            float px = this.SlidingControllerView.Frame.Location.X;
-            float x = this.LocationOfPanner(panner);
-            float w = this.ReferenceBounds.Size.Width;
+            nfloat px = this.SlidingControllerView.Frame.Location.X;
+            nfloat x = this.LocationOfPanner(panner);
+            nfloat w = this.ReferenceBounds.Size.Width;
 
             Action didCloseSelector = null;
             Action didOpenSelector = null;
@@ -1934,9 +1934,9 @@ namespace MonoKit.UI.ViewDeck
                     this.CenterViewHidden();
                 }
 
-                float lw3 = (w - this.LeftLedge) / 3.0f;
-                float rw3 = (w - this.RightLedge) / 3.0f;
-                float velocity = panner.VelocityInView(this.referenceView).X;
+                nfloat lw3 = (w - this.LeftLedge) / 3.0f;
+                nfloat rw3 = (w - this.RightLedge) / 3.0f;
+                nfloat velocity = panner.VelocityInView(this.referenceView).X;
 
                 if (Math.Abs(velocity) < 500) 
                 {
@@ -2279,10 +2279,10 @@ namespace MonoKit.UI.ViewDeck
 
         /// <summary>
         /// </summary>
-        private void SetRightLedge(float rightLedge) 
+        private void SetRightLedge(nfloat rightLedge) 
         {
-            float minLedge = Math.Min(this.ReferenceBounds.Size.Width, rightLedge);
-            rightLedge = Math.Max(rightLedge, minLedge);
+			var minLedge = (nfloat)Math.Min(this.ReferenceBounds.Size.Width, rightLedge);
+			rightLedge = (nfloat)Math.Max(rightLedge, minLedge);
 
             if (this.viewAppeared && FloatEqual(this.SlidingControllerView.Frame.Location.X, this.RightLedge - this.ReferenceBounds.Size.Width)) 
             {
@@ -2307,10 +2307,10 @@ namespace MonoKit.UI.ViewDeck
 
         /// <summary>
         /// </summary>
-        private void SetRightLedge(float rightLedge, Action<bool> completion)
+        private void SetRightLedge(nfloat rightLedge, Action<bool> completion)
         {
-            float minLedge = Math.Min(this.ReferenceBounds.Size.Width, rightLedge);
-            rightLedge = Math.Max(rightLedge, minLedge);
+			var minLedge = (nfloat)Math.Min(this.ReferenceBounds.Size.Width, rightLedge);
+			rightLedge = (nfloat)Math.Max(rightLedge, minLedge);
 
             if (this.viewAppeared && FloatEqual(this.SlidingControllerView.Frame.Location.X, this.RightLedge - this.ReferenceBounds.Size.Width)) 
             {
@@ -2335,10 +2335,10 @@ namespace MonoKit.UI.ViewDeck
 
         /// <summary>
         /// </summary>
-        private void SetLeftLedge(float leftLedge) 
+        private void SetLeftLedge(nfloat leftLedge) 
         {
-            float minLedge = Math.Min(this.ReferenceBounds.Size.Width, leftLedge);
-            leftLedge = Math.Max(leftLedge, minLedge);
+			var minLedge = (nfloat)Math.Min(this.ReferenceBounds.Size.Width, leftLedge);
+			leftLedge = (nfloat)Math.Max(leftLedge, minLedge);
 
             if (this.viewAppeared && FloatEqual(this.SlidingControllerView.Frame.Location.X, this.ReferenceBounds.Size.Width - this.LeftLedge)) 
             {
@@ -2363,10 +2363,10 @@ namespace MonoKit.UI.ViewDeck
 
         /// <summary>
         /// </summary>
-        private void SetLeftLedge(float leftLedge, Action<bool> completion)
+        private void SetLeftLedge(nfloat leftLedge, Action<bool> completion)
         {
-            float minLedge = Math.Min(this.ReferenceBounds.Size.Width, leftLedge);
-            leftLedge = Math.Max(leftLedge, minLedge);
+			nfloat minLedge = (nfloat)Math.Min(this.ReferenceBounds.Size.Width, leftLedge);
+			leftLedge = (nfloat)Math.Max(leftLedge, minLedge);
 
             if (this.viewAppeared && FloatEqual(this.SlidingControllerView.Frame.Location.X, this.ReferenceBounds.Size.Width - this.LeftLedge)) 
             {
@@ -2417,7 +2417,7 @@ namespace MonoKit.UI.ViewDeck
             if (shadowedView == null) return;
             
             shadowedView.Layer.ShadowRadius = this.originalShadowRadius;
-            shadowedView.Layer.ShadowOpacity = this.originalShadowOpacity;
+			shadowedView.Layer.ShadowOpacity = (float)this.originalShadowOpacity;
             shadowedView.Layer.ShadowColor = this.originalShadowColor.CGColor; 
             shadowedView.Layer.ShadowOffset = this.originalShadowOffset;
             shadowedView.Layer.ShadowPath = this.originalShadowPath != null ? this.originalShadowPath.CGPath :  new CGPath();
