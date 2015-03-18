@@ -22,15 +22,15 @@
 namespace MonoKit.UI.ViewDeck
 {
     using System;
-    using MonoTouch.Foundation;
-    using MonoTouch.CoreAnimation;
-    using MonoTouch.UIKit;
-    using System.Drawing;
+    using Foundation;
+    using CoreAnimation;
+    using UIKit;
+    using CoreGraphics;
 
     public class ViewDeckControllerDelegate : NSObject
     {
 
-        public virtual bool ApplyShadow(ViewDeckController viewDeckController, CALayer shadowLayer, RectangleF rect) 
+        public virtual bool ApplyShadow(ViewDeckController viewDeckController, CALayer shadowLayer, CGRect rect) 
         {
             return false;
         }

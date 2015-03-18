@@ -25,12 +25,12 @@ namespace MonoKit.UI.ViewDeck
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
-    using MonoTouch.Foundation;
-    using MonoTouch.UIKit;
+    using CoreGraphics;
+    using Foundation;
+    using UIKit;
     using System.Diagnostics;
-    using MonoTouch.CoreGraphics;
-    using MonoTouch.ObjCRuntime;
+    using CoreGraphics;
+    using ObjCRuntime;
 
     public enum ViewDeckPanningMode
     {
@@ -79,7 +79,7 @@ namespace MonoKit.UI.ViewDeck
         private UIViewController slidingController;
 
         private float originalShadowRadius;
-        private SizeF originalShadowOffset;
+        private CGSize originalShadowOffset;
         private UIColor originalShadowColor;
         private float originalShadowOpacity;
 
@@ -93,7 +93,7 @@ namespace MonoKit.UI.ViewDeck
         private float preRotationCenterWidth;
         private float panOrigin;
 
-		private SizeF preRotationSize;
+		private CGSize preRotationSize;
 		//private SizeF preRotationCenterSize;
 		//private bool preRotationIsLandscape;
 		//UIInterfaceOrientation willAppearShouldArrangeViewsAfterRotation;
@@ -488,7 +488,7 @@ namespace MonoKit.UI.ViewDeck
             }
         }
 
-        private RectangleF ReferenceBounds
+        private CGRect ReferenceBounds
         {
             get
             {
@@ -497,7 +497,7 @@ namespace MonoKit.UI.ViewDeck
                     return this.referenceView.Bounds;
                 }
 
-                return RectangleF.Empty;
+                return CGRect.Empty;
             }
         }
 
@@ -529,12 +529,12 @@ namespace MonoKit.UI.ViewDeck
             }
         }
 
-        private static RectangleF RectangleShrink(RectangleF rect, float width, float height)
+        private static CGRect RectangleShrink(CGRect rect, float width, float height)
         {
-            return new RectangleF(rect.X, rect.Y, rect.Width - width, rect.Height - height);
+            return new CGRect(rect.X, rect.Y, rect.Width - width, rect.Height - height);
         }
 
-        private RectangleF CenterViewBounds 
+        private CGRect CenterViewBounds 
         {
             get
             {
@@ -553,7 +553,7 @@ namespace MonoKit.UI.ViewDeck
             }
         }
 
-        private RectangleF SideViewBounds 
+        private CGRect SideViewBounds 
         {
             get
             {
@@ -609,7 +609,7 @@ namespace MonoKit.UI.ViewDeck
             this.originalShadowRadius = 0;
             this.originalShadowOpacity = 0;
             this.originalShadowColor = null;
-            this.originalShadowOffset = SizeF.Empty;
+            this.originalShadowOffset = CGSize.Empty;
             this.originalShadowPath = null;
         }
 
@@ -1051,7 +1051,7 @@ namespace MonoKit.UI.ViewDeck
             shotView.Frame = this.View.Frame; 
             this.View.Superview.AddSubview(shotView);
 
-            RectangleF targetFrame = this.View.Frame; 
+            CGRect targetFrame = this.View.Frame; 
 
             this.View.Frame = RectangleFOffset(this.View.Frame, this.View.Frame.Size.Width, 0);
             
@@ -1095,9 +1095,9 @@ namespace MonoKit.UI.ViewDeck
             return SlideDuration(animated, 0.3f);
         }
         
-        private static RectangleF RectangleOffsetTopAndShrink(RectangleF rect, float offset)
+        private static CGRect RectangleOffsetTopAndShrink(CGRect rect, float offset)
         {
-            return new RectangleF(rect.X, rect.Y + offset, rect.Width, rect.Height - offset);
+            return new CGRect(rect.X, rect.Y + offset, rect.Width, rect.Height - offset);
         }
 
         #endregion
@@ -1107,7 +1107,7 @@ namespace MonoKit.UI.ViewDeck
             this.originalShadowRadius = 0;
             this.originalShadowOpacity = 0;
             this.originalShadowColor = null;
-            this.originalShadowOffset = SizeF.Empty;
+            this.originalShadowOffset = CGSize.Empty;
             this.originalShadowPath = null;
             
             this.slidingController = null;
@@ -1139,7 +1139,7 @@ namespace MonoKit.UI.ViewDeck
             this.panners.Clear();
         }
         
-        private void PerformSelector(NSAction action, float delay)
+        private void PerformSelector(Action action, float delay)
         {
             int d = (int)(1000 * delay);
             
@@ -1175,16 +1175,16 @@ namespace MonoKit.UI.ViewDeck
             return offset;
         }
 
-        private RectangleF SlidingRectForOffset(float offset) 
+        private CGRect SlidingRectForOffset(float offset) 
         {
             offset = this.LimitOffset(offset);
 
             var sz = this.SlidingSizeForOffset(offset);
 
-            return new RectangleF(this.ResizesCenterView && offset < 0 ? 0 : offset, 0, sz.Width, sz.Height);
+            return new CGRect(this.ResizesCenterView && offset < 0 ? 0 : offset, 0, sz.Width, sz.Height);
         }
 
-        private SizeF SlidingSizeForOffset(float offset) 
+        private CGSize SlidingSizeForOffset(float offset) 
         {
             if (!this.ResizesCenterView)
             {
@@ -1195,10 +1195,10 @@ namespace MonoKit.UI.ViewDeck
 
             if (offset < 0) 
             {
-                return new SizeF(this.CenterViewBounds.Size.Width + offset, this.CenterViewBounds.Size.Height);
+                return new CGSize(this.CenterViewBounds.Size.Width + offset, this.CenterViewBounds.Size.Height);
             }
 
-            return new SizeF(this.CenterViewBounds.Size.Width - offset, this.CenterViewBounds.Size.Height);
+            return new CGSize(this.CenterViewBounds.Size.Width - offset, this.CenterViewBounds.Size.Height);
         }
 
         private void SetSlidingFrameForOffset(float offset) 
@@ -1273,7 +1273,7 @@ namespace MonoKit.UI.ViewDeck
             this.SetSlidingFrameForOffset(offset);
             
             this.preRotationWidth = 0;
-			this.preRotationSize = new SizeF ();
+			this.preRotationSize = new CGSize ();
         }
 
         private void ShowCenterView(bool animated, Action<ViewDeckController> completed)
@@ -1672,7 +1672,7 @@ namespace MonoKit.UI.ViewDeck
             return true;
         }
 
-        private static RectangleF  RectangleFOffset(RectangleF rect, float dx, float dy)
+        private static CGRect  RectangleFOffset(CGRect rect, float dx, float dy)
         {
             // todo: is this correct
             return rect.Inset(dx, dy);
@@ -1796,7 +1796,7 @@ namespace MonoKit.UI.ViewDeck
 
         private float LocationOfPanner(UIPanGestureRecognizer panner) 
         {
-            PointF pan = panner.TranslationInView(this.referenceView);
+            CGPoint pan = panner.TranslationInView(this.referenceView);
             float x = pan.X + this.panOrigin;
 
             if (this.LeftController == null) 
@@ -2073,7 +2073,7 @@ namespace MonoKit.UI.ViewDeck
         }
 
         private void ApplySideController(ref UIViewController controllerStore, UIViewController newController, UIViewController otherController, 
-                                             NSAction clearOtherController) 
+                                             Action clearOtherController) 
         {
             Action<UIViewController> beforeBlock = (x) => {};
             Action<UIViewController, bool> afterBlock = (x, y) => {};
@@ -2441,7 +2441,7 @@ namespace MonoKit.UI.ViewDeck
                 shadowedView.Layer.ShadowRadius = 10;
                 shadowedView.Layer.ShadowOpacity = 0.5f;
                 shadowedView.Layer.ShadowColor = UIColor.Black.CGColor;
-                shadowedView.Layer.ShadowOffset = SizeF.Empty;
+                shadowedView.Layer.ShadowOffset = CGSize.Empty;
                 shadowedView.Layer.ShadowPath = UIBezierPath.FromRect(shadowedView.Bounds).CGPath;
             }
         }
