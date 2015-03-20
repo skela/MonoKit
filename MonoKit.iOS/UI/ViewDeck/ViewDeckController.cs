@@ -24,8 +24,7 @@
 namespace MonoKit.UI.ViewDeck
 {
     using System;
-    using System.Collections.Generic;
-    using CoreGraphics;
+    using System.Collections.Generic;    
     using Foundation;
     using UIKit;
     using System.Diagnostics;
