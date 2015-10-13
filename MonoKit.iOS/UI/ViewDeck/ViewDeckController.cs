@@ -2427,6 +2427,9 @@ namespace MonoKit.UI.ViewDeck
             UIView shadowedView = this.SlidingControllerView;
             if (shadowedView == null) return;
             
+			if (shadowedView.Layer.ShadowPath == null)
+				shadowedView.Layer.ShadowPath = new CGPath ();
+
             this.originalShadowRadius = shadowedView.Layer.ShadowRadius;
             this.originalShadowOpacity = shadowedView.Layer.ShadowOpacity;
             this.originalShadowColor = shadowedView.Layer.ShadowColor != null ? UIColor.FromCGColor(shadowedView.Layer.ShadowColor) : null;
